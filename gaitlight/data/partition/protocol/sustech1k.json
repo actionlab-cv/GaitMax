@@ -1,0 +1,42 @@
+{
+    "type": "contains",
+    "probe": {
+        "Normal": [
+            "01-nm"
+        ],
+        "Bag": [
+            "bg"
+        ],
+        "Clothing": [
+            "cl"
+        ],
+        "Carrying": [
+            "cr"
+        ],
+        "Umbrella": [
+            "ub"
+        ],
+        "Uniform": [
+            "uf"
+        ],
+        "Occlusion": [
+            "oc"
+        ],
+        "Night": [
+            "nt"
+        ]
+    },
+    "gallery": [
+        "00-nm"
+    ],
+    "names": [
+        "Normal",
+        "Bag",
+        "Clothing",
+        "Carrying",
+        "Umbrella",
+        "Uniform",
+        "Occlusion",
+        "Night"
+    ]
+}

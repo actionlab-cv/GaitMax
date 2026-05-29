@@ -1,0 +1,14 @@
+# pre-trained weights
+weights
+ckpt
+
+# cache
+cache
+debug
+
+# wandb
+wandb
+
+# idea & vscode
+.idea
+.vscode

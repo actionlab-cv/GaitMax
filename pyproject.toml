@@ -1,0 +1,60 @@
+[project]
+name = "gait-light"
+version = "26.1.1"
+description = "High performance gait recognition codebase built on PyTorch and Lightning."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch",
+    "torchvision",
+    "xformers ; sys_platform == 'linux'",
+    "torchcodec",
+    "kornia",
+    "opencv-python",
+    "pycocotools",
+    "lightning",
+    "wandb",
+    "numpy",
+    "pandas",
+    "seaborn",
+    "matplotlib",
+    "rich",
+    "omegaconf",
+    "einops",
+    "pillow",
+    "scipy",
+    "protobuf",
+    "timm",
+    "torchtune",
+    "h5py>=3.14.0",
+    "torchao>=0.13.0",
+    "jupyter>=1.1.1",
+    "transformers>=5.2.0",
+    "termcolor>=3.3.0",
+    "google-genai>=1.0.0",
+    "open_clip_torch>=2.24.0",
+    "openai>=1.50.0",
+    "safetensors>=0.4.0",
+]
+
+[tool.uv]
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux'" },
+]
+torchvision = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux'" },
+]
+xformers = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux'" },
+]
