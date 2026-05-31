@@ -1,0 +1,6 @@
+import{j as e}from"./utils.Bu_UH96H.js";import{r as s}from"./index.Bb60DpJX.js";import{c as a,B as c}from"./button.iBPTX6y2.js";const r=[["path",{d:"M20 6 9 17l-5-5",key:"1gmf2c"}]],d=a("check",r);const l=[["rect",{width:"14",height:"14",x:"8",y:"8",rx:"2",ry:"2",key:"17jyea"}],["path",{d:"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2",key:"zix9uf"}]],p=a("copy",l),t={bibtex:`@inproceedings{huang2026gaitmax,
+  title     = {Unlocking Motion from Large Vision Models with a Semantic and Kinematic Duality for Gait Recognition},
+  author    = {Huang, Zhanbo and Ye, Dingqiang and Liu, Xiaoming and Kong, Yu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026},
+}`};function g(){const[o,i]=s.useState(!1),n=async()=>{await navigator.clipboard.writeText(t.bibtex),i(!0),setTimeout(()=>i(!1),2e3)};return e.jsxs("div",{className:"relative",children:[e.jsxs(c,{variant:"outline",size:"sm",onClick:n,className:"absolute right-3 top-3 gap-1.5","aria-label":"Copy BibTeX",children:[o?e.jsx(d,{className:"size-4"}):e.jsx(p,{className:"size-4"}),o?"Copied":"Copy"]}),e.jsx("pre",{className:"overflow-x-auto rounded-xl border bg-card p-5 pr-24 text-sm leading-relaxed",children:e.jsx("code",{children:t.bibtex})})]})}export{g as default};
