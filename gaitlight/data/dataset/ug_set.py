@@ -13,7 +13,7 @@ import torch.distributed
 from rich.progress import Progress
 from torch.utils.data import Dataset
 
-from gaitlight.data.dataset.loader import load_mp4, load_pt
+from gaitlight.data.dataset.loader import load_caption, load_mp4, load_pt
 from gaitlight.types import SequenceData, SequenceItem, SequenceMeta
 
 logger = logging.getLogger(__name__)
@@ -31,13 +31,14 @@ class UGSet(Dataset):
     Unified Gait Dataset.
     """
 
-    def __init__(self, root: Path, partition: Path, using: list[str], mode: str = Literal['train', 'val', 'pred']):
+    def __init__(self, root: Path, partition: Path, using: list[str], mode: str = Literal['train', 'val', 'pred'], caption: bool = False):
         super().__init__()
 
         self.root = root / 'sequences'
         self.partition = partition
         self.using = using
         self.mode = mode
+        self.caption = caption  # also load co-located caption.pt -> SequenceItem.cpt (for CDLoss)
 
         # load subject list from partition
         part = json.load(self.partition.open('rb'))
@@ -79,7 +80,8 @@ class UGSet(Dataset):
             Path(f).stem: loader_func[f](meta.path / f)
             for f in self.using
         })
-        return SequenceItem(seq=seq, meta=meta, label=self.m_sub[meta.subject])
+        cpt = load_caption(meta.path / 'caption.pt') if self.caption else None
+        return SequenceItem(seq=seq, meta=meta, label=self.m_sub[meta.subject], cpt=cpt)
 
     @property
     def signature(self) -> str:
@@ -90,11 +92,14 @@ class UGSet(Dataset):
             'partition_st_mtime': self.partition.stat().st_mtime,
             'using': self.using,
             'mode': self.mode,
+            'caption': self.caption,
         }
         return hashlib.sha256(json.dumps(c, sort_keys=True).encode()).hexdigest()
 
     def _touch(self, path: Path) -> bool:
-        return all((path / f).exists() for f in self.using)
+        return all((path / f).exists() for f in self.using) and (
+            not self.caption or (path / 'caption.pt').exists()
+        )
 
     @staticmethod
     def _is_rank0() -> bool:

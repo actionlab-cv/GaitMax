@@ -25,6 +25,7 @@ class UGModule(pl.LightningDataModule):
         v = d['loader']['val']
         return cls(
             root=Path(c['root']), partition=Path(c['partition']), using=c['using'], num_workers=c.get('num_workers', 0),
+            caption=c.get('caption', False),
             train_identity_size=t['identity_size'], train_sequence_size=t['sequence_size'], train_max_steps=t['max_steps'],
             train_collate_sample=t['sample'], train_collate_frame_num=t['frame_num'], train_collate_frame_buf=t.get('frame_buf', 0),
             val_sequence_size=v['sequence_size'], val_collate_sample=v['sample'], val_collate_frame_num=v['frame_num'],
@@ -33,7 +34,7 @@ class UGModule(pl.LightningDataModule):
 
     def __init__(
             self,
-            root: Path, partition: Path, using: list[str], num_workers: int = 0,
+            root: Path, partition: Path, using: list[str], num_workers: int = 0, caption: bool = False,
             train_identity_size: int | None = None, train_sequence_size: int | None = None, train_max_steps: int | None = None,
             train_collate_sample: list[str] | None = None, train_collate_frame_num: int | list[int] | None = None, train_collate_frame_buf: int | None = None,
             val_sequence_size: int | None = None,
@@ -46,6 +47,7 @@ class UGModule(pl.LightningDataModule):
         self.partition = partition
         self.using = using
         self.num_workers = num_workers
+        self.caption = caption
 
         # train set
         self.t_set = None
@@ -68,7 +70,7 @@ class UGModule(pl.LightningDataModule):
 
     def setup(self, stage: str) -> None:
         if stage in ['fit', None]:
-            self.t_set = UGSet(self.root, self.partition, self.using, mode='train')
+            self.t_set = UGSet(self.root, self.partition, self.using, mode='train', caption=self.caption)
             logger.info('train set loaded')
         if stage in ['fit', 'validate', 'test', None]:
             self.v_set = UGSet(self.root, self.partition, self.using, mode='val')

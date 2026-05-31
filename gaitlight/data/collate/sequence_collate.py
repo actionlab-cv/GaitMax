@@ -42,11 +42,16 @@ class SequenceCollate:
             for f in dataclasses.fields(SequenceData)
         })
 
+        # per-sequence caption embeddings (not frame-sampled); [b, l, d] or None
+        cpt = (torch.stack([item.cpt for item in padded_items])
+               if padded_items and padded_items[0].cpt is not None else None)
+
         return InputBatch(
             seq=seq_batch,
             meta=[item.meta for item in padded_items],
             label=torch.tensor([item.label for item in padded_items]),
             sample=padded_infos,
+            cpt=cpt,
         )
 
     def _sample_item(self, item: SequenceItem) -> tuple[SequenceItem, SampleInfo]:

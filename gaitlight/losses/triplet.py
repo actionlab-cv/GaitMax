@@ -6,6 +6,8 @@ import torch
 from omegaconf import DictConfig, ListConfig, OmegaConf
 from torch import nn
 
+from gaitlight.losses._common import EPS
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,7 +23,7 @@ class TripletLoss(nn.Module):
         self.s_margin = margin
 
     @property
-    def margin(self, eps: float = 1e-6) -> float:
+    def margin(self, eps: float = EPS) -> float:
         if not self.dynamic:
             return self.s_margin
 
@@ -156,7 +158,7 @@ class TripletLoss(nn.Module):
         x = einops.rearrange(embed, 'n c p -> p n c')
         x2 = torch.sum(x ** 2, dim=-1, keepdim=True)
         dist = x2 + x2.transpose(1, 2) - 2 * torch.bmm(x, x.transpose(1, 2))
-        dist = torch.sqrt(torch.relu(dist) + 1e-9)  # [p, n, n]
+        dist = torch.sqrt(torch.relu(dist) + EPS)  # [p, n, n]
         return dist.mean(dim=0)  # [n, n]
 
     @staticmethod
@@ -165,7 +167,7 @@ class TripletLoss(nn.Module):
         y2 = torch.sum(x ** 2, -1).unsqueeze(1)
         inner = x.matmul(x.transpose(1, 2))
         dist = x2 + y2 - 2 * inner
-        dist = torch.sqrt(torch.relu(dist) + 1e-9)  # [p, n_x, n_y]
+        dist = torch.sqrt(torch.relu(dist) + EPS)  # [p, n_x, n_y]
         return dist
 
     @staticmethod
@@ -179,7 +181,7 @@ class TripletLoss(nn.Module):
 
         x2 = torch.sum(x ** 2, dim=-1, keepdim=True)  # [p, n, 1]
         dist = x2 + x2.transpose(1, 2) - 2 * torch.bmm(x, x.transpose(1, 2))
-        return torch.sqrt(torch.relu(dist) + 1e-9)
+        return torch.sqrt(torch.relu(dist) + EPS)
 
     @staticmethod
     def _to_triplet_v1(label: torch.Tensor, dist: torch.Tensor) -> dict[str, torch.Tensor]:
@@ -233,7 +235,7 @@ class TripletLoss(nn.Module):
             num: number of non-zero elements
         """
 
-        eps = 1e-9
+        eps = EPS
         l_sum = x.sum(dim=-1)
         l_num = (x != 0).sum(dim=-1).float()
         l_avg = l_sum / (l_num + eps)

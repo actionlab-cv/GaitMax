@@ -31,6 +31,20 @@ GaitMax is built on **Gait Light**, a PyTorch + [Lightning](https://lightning.ai
 - **GPU-optimized losses.** The triplet and other objectives are written as fully vectorized tensor ops — part-wise pairwise distances via batched `bmm`, boolean-mask triplet mining, no per-sample Python loops — so the full loss runs on-GPU.
 - **Multi-node DDP out of the box.** Built on Lightning: multi-node / multi-GPU DDP, mixed precision (`16-mixed`), and synchronized BatchNorm are single config flags (`num_nodes`, `devices`, `precision`, `sync_batchnorm`).
 
+## Pretrained weights
+
+GaitMax foundation-pretrained weights (semantic, kinematic, prior, and IQA branches; the router is re-initialized) are hosted on the Hugging Face Hub at [`action-lab/GaitMax`](https://huggingface.co/action-lab/GaitMax). Load with `strict=False`:
+
+```python
+from huggingface_hub import hf_hub_download
+from safetensors.torch import load_file
+
+path = hf_hub_download("action-lab/GaitMax", "foundation.safetensors")
+model.load_state_dict(load_file(path), strict=False)
+```
+
+GaitMax uses a frozen DINOv3 ViT-S/16 backbone, whose weights are **not** bundled here. Download the standard public DINOv3 ViT-S/16 checkpoint and place it under `weights/` so the DINO wrapper can load it.
+
 ## Citation
 
 ```bibtex

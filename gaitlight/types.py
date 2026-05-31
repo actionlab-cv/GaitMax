@@ -32,6 +32,7 @@ class SequenceItem:
     seq: SequenceData
     label: int
     meta: SequenceMeta
+    cpt: Tensor | None = None  # per-sequence caption attribute embedding [l, d] (CDLoss)
 
 
 @dataclass
@@ -48,6 +49,7 @@ class InputBatch:
     label: Tensor  # [b]
     meta: list[SequenceMeta]
     sample: list[SampleInfo]
+    cpt: Tensor | None = None  # [b, l, d] per-sequence caption embeddings (CDLoss)
 
 
 @dataclass
